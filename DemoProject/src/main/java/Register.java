@@ -1,0 +1,106 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class Register
+ */
+@WebServlet("/Register")
+public class Register extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Register() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+
+		String n = request.getParameter("userName");
+		String p = request.getParameter("userPass");
+		String e = request.getParameter("userEmail");
+		String c = request.getParameter("userCountry");
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/demo", "root", "");
+
+			PreparedStatement ps = con
+					.prepareStatement("INSERT INTO REGISTERUSER VALUES(?,?,?,?)");
+
+			ps.setString(1, n);
+			ps.setString(2, p);
+			ps.setString(3, e);
+			ps.setString(4, c);
+
+			int i = ps.executeUpdate();
+			if (i > 0) {
+				out.print("You are successfully registered...");
+				ps = con.prepareStatement("SELECT * FROM REGISTERUSER");
+
+				out.print("<br /><table width=50% border=1>");
+				out.print("<caption>Users:</caption>");
+
+				ResultSet rs = ps.executeQuery();
+
+				/* Printing column names */
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int total = rsmd.getColumnCount();
+				out.print("<tr>");
+				for (int j = 1; j <= total; j++) {
+					out.print("<th>" + rsmd.getColumnName(j) + "</th>");
+				}
+
+				out.print("</tr>");
+
+				/* Printing result */
+
+				while (rs.next()) {
+					out.print("<tr><td>" + rs.getString(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3)
+							+ "</td><td>" + rs.getString(4) + "</td></tr>");
+
+				}
+
+				out.print("</table>");
+			}
+			ps.close();
+			con.close();
+		} catch (Exception e2) {
+			System.out.println(e2);
+		}
+
+		out.close();
+
+	}
+
+}
