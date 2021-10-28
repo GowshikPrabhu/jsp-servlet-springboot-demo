@@ -4,4 +4,4 @@
 |--------- | --------------|
 | Demo Project | Simple servlet application |
 | JSPDemo | Simple jsp application |
-| Database | Simple servlet + jsp application |
+| ServletAndJsp | Simple servlet + jsp application |
