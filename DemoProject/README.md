@@ -36,5 +36,5 @@ Example
 ## General Setup for JDBC Connectivity
 * Download and extract sql-connector JDBC driver to some foler
 * Right click on the project select *Build Path -> Configure* Build Path
-* In the *Librararies* tab, click on *Add External JARs* option and select the sql-connector jar file
+* In the *Libraries* tab, click on *Add External JARs* option and select the sql-connector jar file
 * Apply and close
